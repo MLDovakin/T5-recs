@@ -29,11 +29,9 @@ def compute_metrics(eval_preds):
     preds = preds[0]
   decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
 
-  # Replace -100 in the labes as we can't decode them.
   labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
   decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
-  # Some simple post processing
   decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
 
   result = metric.compute(predictions = decoded_preds, references = decoded_labels)
