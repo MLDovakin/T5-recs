@@ -9,8 +9,8 @@ import datasets
 
 new_df = pd.read_csv('train.csv').drop('Unnamed: 0',axis=1)
 
-train_df = new_df[0:20000].sample(frac = 1)
-eval_df = new_df[21000:40000].sample(frac = 1)
+train_df = new_df[0:25000].sample(frac = 1)
+eval_df = new_df[25000:30000].sample(frac = 1)
 
 del new_df
 
