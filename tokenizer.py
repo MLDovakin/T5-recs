@@ -22,7 +22,7 @@ max_target_length = 3
 
 def preprocess_function(examples):
   inputs = [doc for doc in examples["source"]]
-  model_inputs = tokenizer(inputs, max_length=768, truncation=True, padding=True)
+  model_inputs = tokenizer(inputs, max_length=512, truncation=True, padding=True)
 
   #Setup the tokenizer for targets
   with tokenizer.as_target_tokenizer():
@@ -32,6 +32,7 @@ def preprocess_function(examples):
   return model_inputs
 
 tokenized_datasets = data_dict_dataset.map(preprocess_function, batched=True)
+tokenized_datasets.set_format('numpy',  columns=['input_ids', 'attention_mask', 'labels'])
 
 data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
 
