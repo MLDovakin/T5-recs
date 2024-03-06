@@ -3,6 +3,11 @@ from transformers import AdamW, get_scheduler
 from tqdm.auto import tqdm
 from accelerate import Accelerator
 
+
+from transformers import AdamW, get_scheduler
+from tqdm.auto import tqdm
+from accelerate import Accelerator
+
 learning_rate = 1e-4
 optim = AdamW(model.parameters(), lr=learning_rate)
 
@@ -20,6 +25,23 @@ progress_bar = tqdm(range(num_training_steps))
 
 
 
+
+def get_avg_acc(list_of_dicts):
+    
+    sum_dict = {}
+    for dict_r in list_of_dicts:
+        for key in dict_r:
+            if key in sum_dict:
+                sum_dict[key] += dict_r[key]
+            else:
+                sum_dict[key] = dic_r[key]
+
+    for key in sum_dict:
+        sum_dict[key] /= len(list_of_dicts)
+
+    for key in sum_dict:
+        print(f"Avg loss for {key}: {sum_dict[key]}")
+        
 model.to(device)
 model.train()
 
@@ -45,8 +67,11 @@ for epoch in tqdm(range(1)):
         optim.step()
         lr_scheduler.step()        
         progress_bar.update(1)
+        
     model.eval()
     with torch.no_grad():
+        avg_acc = []
+
         for batch in eval_dataloader:
 
             input_ids = batch['input_ids'].to(device)
@@ -58,7 +83,7 @@ for epoch in tqdm(range(1)):
 
             orig_text_output = tokenizer.batch_decode(batch['labels'], skip_special_tokens=False)
             outputs_decoded = tokenizer.batch_decode(generated_ids, skip_special_tokens=False)
-            
-            compute_metrics(generated_ids.detach().cpu().numpy(), batch['labels'],)
-            
-            print(outputs_decoded)
+
+            val_acc = compute_metrics(generated_ids.detach().cpu().numpy(), batch['labels'],)
+            avg_acc.append(val_acc)
+        get_avg_acc(avg_acc)
