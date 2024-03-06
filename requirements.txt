@@ -502,7 +502,7 @@ pettingzoo==1.24.0
 pexpect @ file:///home/conda/feedstock_root/build_artifacts/pexpect_1667297516076/work
 phik==0.12.4
 pickleshare @ file:///home/conda/feedstock_root/build_artifacts/pickleshare_1602536217715/work
-Pillow==9.5.0
+Pillow==10.2.0
 pkgutil_resolve_name @ file:///home/conda/feedstock_root/build_artifacts/pkgutil-resolve-name_1694617248815/work
 platformdirs==4.1.0
 plotly==5.18.0
