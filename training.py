@@ -2,6 +2,7 @@
 from transformers import DataCollatorForSeq2Seq, Seq2SeqTrainingArguments, Seq2SeqTrainer
 from torch.utils.data import DataLoader
 import AdamW, get_scheduler
+from utils import compute_metrics
 
 
 learning_rate = 1e-3
@@ -15,32 +16,6 @@ lr_scheduler = get_scheduler(
     num_warmup_steps=3,
     num_training_steps=num_training_steps,
 )
-import numpy as np
-import os
-def postprocess_text(preds, labels):
-  preds = [pred.strip() for pred in preds]
-  labels = [[label.strip()] for label in labels]
-
-  return preds, labels
-
-def compute_metrics(eval_preds):
-  preds, labels = eval_preds
-  if isinstance(preds, tuple):
-    preds = preds[0]
-  decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
-
-  labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
-  decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
-
-  decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
-
-  result = metric.compute(predictions = decoded_preds, references = decoded_labels)
-  result = {key: value.mid.fmeasure * 100 for key, value in result.items()}
-  prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
-  result["gen_len"] = np.mean(prediction_lens)
-  print(result)
-
-  return result
 
 batch_size = 8
 os.mkdir('test')
