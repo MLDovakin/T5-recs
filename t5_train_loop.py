@@ -3,12 +3,11 @@ from transformers import AdamW, get_scheduler
 from tqdm.auto import tqdm
 from accelerate import Accelerator
 
-learning_rate = 3
+learning_rate = 1e-4
 optim = AdamW(model.parameters(), lr=learning_rate)
 
-num_epochs = 2
-##num_training_steps = num_epochs * len(train_dataloader)
-num_training_steps = 100
+num_epochs = 10
+num_training_steps = num_epochs * len(train_dataloader)
 lr_scheduler = get_scheduler(
     "linear",
     optimizer=optim,
