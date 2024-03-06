@@ -3,11 +3,6 @@ from transformers import AdamW, get_scheduler
 from tqdm.auto import tqdm
 from accelerate import Accelerator
 
-
-from transformers import AdamW, get_scheduler
-from tqdm.auto import tqdm
-from accelerate import Accelerator
-
 learning_rate = 1e-4
 optim = AdamW(model.parameters(), lr=learning_rate)
 
