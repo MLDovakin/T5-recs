@@ -36,7 +36,7 @@ def get_avg_acc(list_of_dicts):
         sum_dict[key] /= len(list_of_dicts)
 
     for key in sum_dict:
-        print(f"Avg loss for {key}: {sum_dict[key]}")
+        print(f"Avg acc for {key}: {sum_dict[key]}")
         
 model.to(device)
 model.train()
@@ -65,21 +65,26 @@ for epoch in tqdm(range(1)):
         progress_bar.update(1)
         
     model.eval()
+    loss_meter = AverageMeter() 
     with torch.no_grad():
         avg_acc = []
 
         for batch in eval_dataloader:
+        input_ids = batch['input_ids'].to(device)
+        attention_mask = batch['attention_mask'].to(device)
+        labels = batch['labels'].to(device)
 
-            input_ids = batch['input_ids'].to(device)
-            attention_mask = batch['attention_mask'].to(device)
-            labels = batch['labels'].to(device)
-            outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
+        outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
 
-            generated_ids = model.generate(input_ids=input_ids) 
+        loss = outputs[0]
+        loss_meter.update(loss.item(), len(batch["input_ids"]))
+        generated_ids = model.generate(input_ids=input_ids) 
 
-            orig_text_output = tokenizer.batch_decode(batch['labels'], skip_special_tokens=False)
-            outputs_decoded = tokenizer.batch_decode(generated_ids, skip_special_tokens=False)
-
-            val_acc = compute_metrics(generated_ids.detach().cpu().numpy(), batch['labels'],)
-            avg_acc.append(val_acc)
-        get_avg_acc(avg_acc)
+        orig_text_output = tokenizer.batch_decode(batch['labels'], skip_special_tokens=False)
+        outputs_decoded = tokenizer.batch_decode(generated_ids, skip_special_tokens=False)
+        
+        val_acc = compute_metrics(generated_ids.detach().cpu().numpy(), batch['labels'],)
+        avg_acc.append(val_acc)
+        
+    get_avg_acc(avg_acc)
+    print(loss_meter.avg)
