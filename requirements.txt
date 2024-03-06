@@ -537,7 +537,7 @@ py-spy==0.3.14
 py4j==0.10.9.7
 pyaml==23.12.0
 PyArabic==0.6.15
-pyarrow==11.0.0
+pyarrow==14.0.1
 pyasn1 @ file:///home/conda/feedstock_root/build_artifacts/pyasn1_1701287008248/work
 pyasn1-modules @ file:///home/conda/feedstock_root/build_artifacts/pyasn1-modules_1695107857548/work
 PyAstronomy==0.20.0
