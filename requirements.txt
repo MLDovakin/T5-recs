@@ -704,7 +704,7 @@ srsly @ file:///home/conda/feedstock_root/build_artifacts/srsly_1695653949688/wo
 stable-baselines3==2.1.0
 stack-data @ file:///home/conda/feedstock_root/build_artifacts/stack_data_1669632077133/work
 stanio==0.3.0
-starlette==0.32.0.post1
+starlette==0.36.2
 statsmodels==0.14.1
 stemming==1.0.1
 stop-words==2018.7.23
